@@ -1,0 +1,83 @@
+{% extends "page.html" %}
+
+{% block content %}
+
+<ul id="settings">
+{% if settings.author %}
+  <li><label>Author</label>: {{settings.author}} </li>
+{% endif %}
+{% if settings.players %}
+  <li><label>Players</label>:
+    <ol>
+      {% for player in settings.players %}
+      <li>{{ player }}</li>
+      {% endfor %}
+    </ol>
+  </li>
+{% endif %}
+{% if settings.score %}
+  <li><label>Score</label>:
+    <ol>
+      {% for score in settings.score %}
+      <li>{{ score }}</li>
+      {% endfor %}
+    </ol>
+  </li>
+{% endif %}
+{% if settings.match_frames %}
+  <li><label>Frames</label>:
+      {{settings.match_frames}}{% if settings.turn_frames %} ({{settings.turn_frames}}){% endif%} 
+  </li>
+{% endif %}
+{% if settings.engage_distance %}
+  <li><label>Engage</label>:
+    <ul>
+      <li><label>Distance</label>: {{settings.engage_distance}}</li>
+      {% if settings.engage_height %}
+      <li><label>Height</label>: {{settings.engage_height}}</li>
+      {% endif %}
+      {% if settings.engage_rotation %}
+      <li><label>Rotation</label>: {{settings.engage_rotation}}</li>
+      {% endif %}
+      {% if settings.engage_space %}
+      <li><label>Space</label>: {{settings.engage_space}}</li>
+      {% endif %}
+    </ul>
+  </li>
+{% endif %}
+{% if settings.gravity_x %}
+  <li><label>Gravity</label>:
+  {{settings.gravity_x}} {{settings.gravity_y}}  {{settings.gravity_z}}
+  </li>
+{% endif %}
+{% if settings.mod %}
+  <li><label>Mod</label>: {{settings.mod}} </li>
+{% endif %}
+{% if settings.flags %}
+  <li><label>Flags</label>: 
+    <ul>
+      {% flags settings.flags %}<li>{{ flag }}</li>{% endflags %}
+    </ul>
+  </li>
+{% endif %}
+<li><a href="/down?hash={{parsed.key.name}}">Download</a></li>
+</ul>
+
+<table id="view">
+<thead><tr><th class="pl0">{{ settings.players.0 }}</th><th></th><th class="pl1">{{ settings.players.1 }}</th></tr></thead>
+{% forframe in frames %}
+<tr>
+<td>{% actions frame.actions 0 %}</td>
+<td>
+  <p class="frame">
+    <span class="pl0">{{frame.score.0}}</span>
+    <span class="time">{{frame.time}}</span>
+    <span class="pl1">{{frame.score.1}}</span>
+  </p>
+</td>
+<td>{% actions frame.actions 1 %}</td>
+</tr>
+{% endforframe %}
+</table>
+
+{% endblock %}

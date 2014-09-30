@@ -1,0 +1,40 @@
+{% extends "page.html" %}
+
+
+{% block content %}
+<h3>{{title|capfirst}}</h3>
+
+{% if replays %}
+<table id="browse">
+<thead>
+  <tr>
+    <th>&nbsp;</th>
+    <th><a href="/?o=f">Filename</a></th>
+    <th>Players</th>
+    <th>Score</th>
+    <th>Author</th>
+    <th><a href="/?o=a">Added</a></th>
+  </tr>
+</thead>
+<tbody>
+{% for r in replays %}
+<tr class="{% cycle alt,noalt %}">
+<td><a href="/down?id={{ r.key.id }}"><img src="/static/images/clip.gif" alt="Download" /></a></td>
+<td><a href="/view?id={{ r.hash }}">{{ r.filename }}</a></td>
+<td class="players"><div class="pl0">{{ r.players.0 }}</div><div class="vs">vs</div><div class="pl1">{{ r.players.1 }}</div></td>
+<td>{% if r.score %}{{r.score.0}} - {{r.score.1}}{% endif %}</td>
+<td>{{ r.author }}</td>
+<td>{{ r.added|date:"jS F Y H:i" }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% if next %}
+<br/>
+<a class="pager" href="?from={{next}}">Next</a> 
+{% endif %}
+{% else %}
+No replays so far
+{% endif %}
+
+{% endblock %}

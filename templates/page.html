@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block heading %}
+<div id="heading">
+<form action="/view" method="POST" enctype="multipart/form-data" >
+ <label>Select toribash replay:</label>
+ <input type="file" name="replay"/>
+ <input type="submit" value="View" name="view"/>
+ <input type="submit" value="Save" name="save"/>
+</form>
+<form id="search" action="/search" method="GET">
+<label>Search player or file</label>:
+<input name="player" id="search_value"/>
+<input type="submit" value="Player"/>
+<input type="submit" value="Filename" onClick="search_value.name='file';"/>
+</form>
+</div>
+{% endblock %}
+
+{% block post-content %}
+<div id="post-content">
+<script type="text/javascript"><!--
+google_ad_client = "pub-8521493523915695";
+/* 728x90, created 5/2/10 */
+google_ad_slot = "1451530641";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+{% endblock %}

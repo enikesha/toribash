@@ -1,0 +1,184 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+html {height: 100%}
+body {
+	font: 12px/18px Arial, Tahoma, Verdana, sans-serif;
+	width: 100%;
+	height: 100%;
+}
+a {
+	color: blue;
+	outline: none;
+	text-decoration: underline;
+}
+a:hover {
+	text-decoration: none;
+}
+p {margin: 0 0 18px}
+img {
+	border: none;
+}
+input {vertical-align: middle}
+#wrapper {
+	width: 1000px;
+	margin: 0 auto;
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+}
+
+
+/* Header
+-----------------------------------------------------------------------------*/
+#header {
+	padding: 20px;
+}
+
+
+/* Middle
+-----------------------------------------------------------------------------*/
+#content {
+	padding: 0 0 140px;
+}
+
+
+
+/* Footer
+-----------------------------------------------------------------------------*/
+#footer {
+	width: 1000px;
+	margin: -134px auto 0;
+	height: 134px;	
+}
+#post-content {
+    height: 96px;
+    width: 728px;
+    margin: auto auto;
+}
+#bottom {
+    background: #562E60;
+    padding: 10px;
+}
+
+#header {
+    background: #8A9146;
+}
+#header a { 
+    color: black; 
+    text-decoration: none;
+}
+
+#heading {
+    border-bottom: solid 1px #4C2356;
+    padding: 10px 0 5px;
+    position: relative;
+}
+#heading form {
+    display: inline;
+}
+#heading form#search {
+    position: absolute;
+    right: 0;
+    top: 9px;
+}
+#content h3 {
+    padding: 20px 10px 10px;
+}
+
+table {
+    border-collapse:collapse;
+}
+
+#browse
+{
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+    width:100%;
+}
+#browse td, #browse th 
+{
+    font-size:1em;
+    border:1px solid #98bf21;
+    padding:3px 7px 2px 7px;
+}
+#browse th 
+{
+    font-size:1.1em;
+    text-align:left;
+    padding-top:5px;
+    padding-bottom:4px;
+    background-color:#A7C942;
+    color:#ffffff;
+}
+#browse tr.alt td 
+{
+    color:#000000;
+    background-color:#EAF2D3;
+}
+
+.pl0 { color: red; }
+.pl1 { color: blue; }
+
+td.players div {
+    width: 100%;
+    text-align: center;
+}
+
+ul.action {
+    list-style-type: none;
+}
+
+#view td
+{
+    font-size:1em;
+    border:1px solid #98bf21;
+    padding:3px 7px 2px 7px;
+    vertical-align:top;
+}
+#settings {
+    float: left;
+    padding-top: 20px;
+    padding-left:1%;
+    width: 24%;
+}
+#settings ul, #settings ol{
+    padding-left: 20px;
+}
+
+#settings label {
+    font-weight: bold;
+}
+
+#settings, #settings ul {
+    list-style-type: none;
+    list-style-position: inside;
+}
+#view {
+    width: 75%;
+    margin-left: auto;
+}
+#view th {
+    font-size: 120%;
+    padding: 10px 0 5px;
+}
+#view th.pl0 { text-align:left; width: 35%;}
+#view th.pl1 { text-align:right; width: 35%;}
+
+#view p.frame {
+    position: relative;
+    width: 100%;
+    text-align: center;
+}
+#view p.frame span.pl0 {
+    position: absolute;
+    left: 0;
+}
+#view p.frame span.pl1 {
+    position: absolute;
+    right: 0;
+}
+#view p.frame span.time {
+    font-size: 200%;
+    padding: 5px 10px;
+}

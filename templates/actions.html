@@ -1,0 +1,15 @@
+{% if actions.grip %}
+<ul class='action grip'>
+{% for j in actions.grip %}
+<li>{{ j }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if actions.joints %}
+<ul class='action joints'>
+{% for j in actions.joints %}
+<li>{{ j }}</li>
+{% endfor %}
+</ul>
+{% endif %}
