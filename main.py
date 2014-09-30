@@ -14,7 +14,7 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 from models import Replay, ReplayParse, ReplayContent
 
-webapp.template.register_template_library('templatetags')
+template.register_template_library('templatetags.tags')
 
 class BaseHandler(webapp.RequestHandler):
     def respond(self, templatename, params=None):
@@ -40,18 +40,18 @@ class MainPage(BaseHandler):
             next = struct.pack("H5BI", *added)
         elif ord == 'f':
             next = replay.filename.encode('utf-8')
-            
+
         return b64encode('%s|%s|%s' % (ord, b64encode(next), replay.key().id()))
-        
+
     def load_bookmark(self, bookmark):
-        ord, next, key = b64decode(bookmark.encode('utf-8')).split('|')    
+        ord, next, key = b64decode(bookmark.encode('utf-8')).split('|')
         if ord == 'a':
             filter = datetime(*struct.unpack("H5BI", b64decode(next)))
         elif ord == 'f':
             filter = b64decode(next).decode('utf-8')
         key = db.Key.from_path('Replay', int(key))
         return ord, filter, key
-            
+
     SORT = {'a':('-added', 'added =', 'added <'),
             'f':('filename', 'filename =', 'filename >')}
 
@@ -73,9 +73,9 @@ class MainPage(BaseHandler):
                 replays.extend(Replay.all(keys_only=True).filter(self.SORT[ord][2], first).order(self.SORT[ord][0]).order('__key__').fetch(ON_PAGE+1-len(replays)))
         else:
             replays = Replay.all(keys_only=True).order(self.SORT[ord][0]).order('__key__').fetch(ON_PAGE+1)
-        
+
         replays = Replay.get(replays)
-         
+
         if len(replays) == ON_PAGE+1:
             next = self.dump_bookmark(ord, replays[ON_PAGE])
             replays = replays[:-1]
@@ -99,7 +99,7 @@ class SearchPage(BaseHandler):
             value = getattr(next, type)
         search, value = [b64encode(v.encode('utf-8')) for v in (search, value)]
         return b64encode('|'.join([type[0], search, value, str(replay.key().id())]))
-    
+
     def get(self):
         next = None
         # Paging by http://google-appengine.googlegroups.com/web/efficient_paging_using_key_instead_of_a_dedicated_unique_property.txt
@@ -123,9 +123,9 @@ class SearchPage(BaseHandler):
             else:
                 return self.redirect('/')
             replays = Replay.all(keys_only=True).filter('%s >=' % type, search).filter('%s <' % type, search + u'\ufffd').order(type).order('__key__').fetch(ON_PAGE+1)
-        
+
         replays = Replay.get(replays)
-         
+
         if len(replays) == ON_PAGE+1:
             next = self.dump_bookmark(type, search, replays[ON_PAGE])
             replays = replays[:-1]
@@ -167,7 +167,7 @@ class ViewReplay(BaseHandler):
             return self.redirect('/view?id=%s' % Replay.parsed.get_value_for_datastore(replay).name(), permanent=True)
         else:
             return self.redirect("/")
-        
+
         if parsed is None:
             return self.not_found()
 
@@ -180,7 +180,7 @@ class DownloadReplay(BaseHandler):
         if 'id' in self.request.GET:
             try:
                 replay = Replay.get_by_id(int(self.request.get('id')))
-            except ValueError: 
+            except ValueError:
                 replay = None
         elif 'name' in self.request.GET:
             replay = Replay.all().filter('filename =', self.request.get('name')).get()
@@ -193,26 +193,20 @@ class DownloadReplay(BaseHandler):
         if replay is None:
             return self.not_found()
 
-        filename = replay.filename        
+        filename = replay.filename
         content = replay.content.content
 
-        self.response.headers['Content-Type'] = "application/octet-stream" 
+        self.response.headers['Content-Type'] = "application/octet-stream"
         self.response.headers['Content-Disposition'] = 'attachment; filename="%s"' % filename
         self.response.out.write(content)
 
 #import db_log
 #db_log.patch_appengine()
 
-application = webapp.WSGIApplication(
+app = webapp.WSGIApplication(
     [('/', MainPage),
      ('/search', SearchPage),
      ('/view', ViewReplay),
      ('/down', DownloadReplay),
      ],
     debug=True)
-
-def main():
-    run_wsgi_app(application)
-
-if __name__=='__main__':
-    main()

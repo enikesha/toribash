@@ -1,11 +1,7 @@
 from copy import deepcopy
+from google.appengine.ext.webapp import template
 
-# import the webapp module
-from google.appengine.ext import webapp
-# get registry, we need it to register our filter later.
-register = webapp.template.create_template_register()
-
-from django import template
+register = template.create_template_register()
 
 
 COMMON = ('','Contracting','Extending','Holding','Relaxing')
@@ -23,7 +19,7 @@ JOINTS = ('Neck',
           'Chest',
           'Lumbar',
           'Abs',
-          
+
           'Right Pecs',
           'Right Shoulder',
           'Right Elbow',
@@ -46,7 +42,7 @@ JOINTS = ('Neck',
           'Right Ankle',
           'Left Ankle')
 
-class FramesNode(template.Node):
+class FramesNode(template.django.template.Node):
     def __init__(self, frames, node_list):
         self.frames = frames
         self.node_list = node_list
@@ -55,7 +51,6 @@ class FramesNode(template.Node):
         frames = self.frames.resolve(context)
 
         def get_joints(new, old):
-            print repr(new), repr(old)
             hold = ['Hold all']
             diff = []
             relax = ['Relax all']
@@ -68,7 +63,7 @@ class FramesNode(template.Node):
                 if old[joint] != state:
                     diff.append(action)
             return min((hold, diff, relax), key=len)
-        
+
         def get_frames():
             joints = {0: dict(enumerate([4]*20)),
                       1: dict(enumerate([4]*20))}
@@ -82,7 +77,7 @@ class FramesNode(template.Node):
                     actions[pl] = {}
                     if 'grip' in acts:
                         new_grips[pl] = acts['grip']
-                        actions[pl]['grip'] = ['%s %s' % (GRIP[new_grips[pl][hand]], HANDS[hand]) for hand in (0, 1) 
+                        actions[pl]['grip'] = ['%s %s' % (GRIP[new_grips[pl][hand]], HANDS[hand]) for hand in (0, 1)
                                                                                                   if new_grips[pl][hand] != grips[pl][hand]]
                     if 'joints' in acts:
                         new_joints[pl].update(acts['joints'])
@@ -93,7 +88,7 @@ class FramesNode(template.Node):
                     yield {'time': time,
                            'score': frames[time]['score'],
                            'actions': actions}
-        
+
         return ''.join(self.node_list.render(template.Context({'frame':frame})) for frame in get_frames())
 
 
@@ -102,7 +97,7 @@ FLAGS = {1: 'Disqualifications',
          4: 'No gripping',
          8: 'Fracture'}
 
-class FlagsNode(template.Node):
+class FlagsNode(template.django.template.Node):
     def __init__(self, flags, node_list):
         self.flags = flags
         self.node_list = node_list
@@ -113,8 +108,8 @@ class FlagsNode(template.Node):
         def get_flags():
             for i, flag in FLAGS.items():
                 if flags & i != 0:
-                    yield flag            
-        
+                    yield flag
+
         return ''.join(self.node_list.render(template.Context({'flag':flag})) for flag in get_flags())
 
 
@@ -137,5 +132,5 @@ def flags(parser, token):
     return FlagsNode(parser.compile_filter(bits[1]), node_list)
 
 @register.inclusion_tag('actions.html')
-def actions(acts, player):  
+def actions(acts, player):
   return {'actions':acts.get(player)}
