@@ -3,6 +3,7 @@ import sys
 import logging
 import traceback
 import struct
+import urllib
 from datetime import datetime
 from base64 import urlsafe_b64encode as b64encode, urlsafe_b64decode as b64decode
 
@@ -196,8 +197,20 @@ class DownloadReplay(BaseHandler):
         filename = replay.filename
         content = replay.content.content
 
+        # To inspect details for the below code, see http://greenbytes.de/tech/tc2231/
+        if u'WebKit' in self.request.user_agent:
+            # Safari 3.0 and Chrome 2.0 accepts UTF-8 encoded string directly.
+            filename_header = 'filename=%s' % filename.encode('utf-8')
+        elif u'MSIE' in self.request.user_agent:
+            # IE does not support internationalized filename at all.
+            # It can only recognize internationalized URL, so we do the trick via routing rules.
+            filename_header = ''
+        else:
+            # For others like Firefox, we follow RFC2231 (encoding extension in HTTP headers).
+            filename_header = 'filename*=UTF-8\'\'%s' % urllib.quote(filename.encode('utf-8'))
+
         self.response.headers['Content-Type'] = "application/octet-stream"
-        self.response.headers['Content-Disposition'] = 'attachment; filename="%s"' % filename
+        self.response.headers['Content-Disposition'] = 'attachment; ' + filename_header
         self.response.out.write(content)
 
 #import db_log
